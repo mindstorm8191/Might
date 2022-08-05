@@ -13,3 +13,16 @@ The story plan so far
 5.  More direct fights with the Darkness creature. Fights will get harder, using more negative battle elements. Players will enter a fortress (just entering will be a huge battle). There will be multiple seals that have to be broken before getting into the center of the fortress. There the player will have their first fight with the Darkness directly.
 6.  The chase. The Darkness will start fleeing, and the player's group will follow. Fights will get harder, and the Darkness will become more desperate to escape. It will begin travling up a mountain, seeking something inside it.
 7.  Does the Darkness manage to escape? Can the players destroy it? I don't know yet.
+    Actually, I think it would be best to leave that up to mystery: nobody knows if it still exists or not. Leave players of the world wondering. It'll be hard to pull off, though...
+
+##### Ideas worth trying out
+
+-   Need more monster types.
+    -   I was thinking of having an artillery type; they get only so close to your orb, then start lobbing projectiles at it, avoiding getting closer. They might even chose a safe place to stop, verses following the normal path to an orb
+    -   Slicers verses punchers. This would imply that both would have a good use. Maybe we should have barricades that can be put up? Though that certainly doesn't vibe well with the classic tower defense strategy
+
+##### Dark effects to use in game
+
+-   Fading lighting, especially when waves begin
+-   dark lines creeping across the interface. This probably means that the whole interface will need to be contained in a canvas, for proper effects generation... I dunno
+    -   Clicking on objects in 3D should still be simple enough. I think the hard part will be displaying numbers & such on a 3D mesh... will have to look into what is needed for that
