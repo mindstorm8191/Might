@@ -22,12 +22,46 @@ function App() {
         <div id="canvas-container">
             <Canvas style={{ height: "100vh", backgroundColor: "black" }}>
                 <spotLight intensity={0.6} position={[30, 30, 50]} angle={0.2} penumbra={0.5} castShadow />
-                <mesh>
-                    <boxBufferGeometry />
-                    <meshPhongMaterial color="red" />
-                </mesh>
+                <GemTower position={[0, -4, -7]} rotation={[Math.PI / 2, 0, 0]} />
+                <GroundTile />
             </Canvas>
         </div>
+    );
+}
+
+function GroundTile(props) {
+    const texture = useLoader(TextureLoader, "http://localhost/Might/getmedia.php?file=whitestoneblocks.png");
+
+    return (
+        <React.Suspense fallback={null}>
+            <mesh>
+                <planeBufferGeometry />
+                <meshStandardMaterial map={texture} />
+            </mesh>
+        </React.Suspense>
+    );
+}
+
+function GemTower(props) {
+    const { nodes, materials } = useGLTF("http://localhost/Might/getmedia.php?file=GemTower.gltf");
+    const textures = useLoader(TextureLoader, [
+        "http://localhost/Might/getmedia.php?file=glitter.png",
+        "http://localhost/Might/getmedia.php?file=whitestoneblocks.png",
+    ]);
+
+    return (
+        <React.Suspense fallback={null}>
+            <mesh geometry={nodes.TowerBase.geometry} {...props}>
+                <meshStandardMaterial map={textures[1]} />
+
+                <mesh geometry={nodes.TowerSide.geometry}>
+                    <meshStandardMaterial map={textures[0]} />
+                </mesh>
+                <mesh geometry={nodes.TowerTop.geometry}>
+                    <meshStandardMaterial map={textures[0]} />
+                </mesh>
+            </mesh>
+        </React.Suspense>
     );
 }
 

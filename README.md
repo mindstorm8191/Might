@@ -2,6 +2,8 @@
 
 A dark Tower Defense game
 
+With players facing the Darkness, this game will need to have a heavy horror aspect to it. The key to making horror work is the atmosphere; having real dangers around that can harm the player
+
 Ethan is right; we need to keep this simple. Or at least, the game should start simple.
 
 The story plan so far
@@ -24,5 +26,18 @@ The story plan so far
 ##### Dark effects to use in game
 
 -   Fading lighting, especially when waves begin
--   dark lines creeping across the interface. This probably means that the whole interface will need to be contained in a canvas, for proper effects generation... I dunno
+-   Dark lines creeping across the interface. This probably means that the whole interface will need to be contained in a canvas, for proper effects generation... I dunno
     -   Clicking on objects in 3D should still be simple enough. I think the hard part will be displaying numbers & such on a 3D mesh... will have to look into what is needed for that
+-   (Borrow some concepts from Thaumcraft's Tainted lands)
+-   Tiles that darken or change color, without anything to explain why
+-   Creatures moving around, generally in the same direction, but not impacting the battle any
+-   Plants dying or transforming into grotesque hostile organisms. Animals too
+
+##### Effects that The Darkness can generate in a battle
+
+-   Creature waves suddenly become more powerful
+-   Specific creatures suddenly gain strength
+-   Towers or walls become 'infected' and crumble
+-   Spheres of influence cause towers / traps to fire weakly or not at all, for a time
+-   Vein-like extensions creeping across the map, which can spawn new creatures on the map at its ends
+-   Torches / other light sources that go dim or completely out
