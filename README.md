@@ -6,7 +6,7 @@ With players facing the Darkness, this game will need to have a heavy horror asp
 
 Ethan is right; we need to keep this simple. Or at least, the game should start simple.
 
-The story plan so far
+##### The story plan so far
 
 1.  Beginner levels; players learn to play the game. This will be 5-10 levels; players will not be able to complete the last level without replaying previous ones at harder levels (thus engraining the need to replay early levels with harder settings to advance).
 2.  Meet other wizards. The player will meet 3 other wizards along the way (maybe 1 at a time, or maybe all 3). The difficulty will ramp up, and players will start playing cooperatively with the other wizards; this will become necessary to pass levels.
@@ -41,3 +41,11 @@ The story plan so far
 -   Spheres of influence cause towers / traps to fire weakly or not at all, for a time
 -   Vein-like extensions creeping across the map, which can spawn new creatures on the map at its ends
 -   Torches / other light sources that go dim or completely out
+
+##### Light sources the user can place
+
+-   All towers will generate some amount of light around them. This will be limited in range, always smaller than the gem's firing range. Towers will not be able to target creatures in the darkness.
+-   Torches can be placed around the map, too. These are a little brighter than a tower's light, and also cheaper to place
+-   Light orbs will light even larger areas, and be less prone to damage or dimming, but also more expensive
+-   Spot lights will focus light in a direction, which the user can change the angle of. The light's length will be substantial, but not cover a very wide area. This can be used to peek into the dark areas of the map and see what's out there, and place new towers / lights away from pre-lit areas
+-   The player's orb will also generate light, covering a decent amount around the orb. Of course, that's not too helpful, being so close to the orb
