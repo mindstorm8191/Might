@@ -4,13 +4,13 @@
 
 
     Task List
-1) Get the login section to work
-2) Set up users to store the ajax code, and log in automatically when the page loads
+
 4) Create a maps list, and ways to create a new map
 5) 
 */
 
 import React from "react";
+import "./App.css";
 import * as Three from "three";
 import { Canvas, useThree, useFrame, useLoader } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
@@ -21,7 +21,7 @@ import { DanCommon } from "./DanCommon.js";
 import { DanInput } from "./DanInput.jsx";
 import { ErrorOverlay } from "./ErrorOverlay.jsx";
 
-const tileSet = [
+export const tileSet = [
     { name: "greenEntrance", file: "greenPathEntrance.png" },
     { name: "greenStraight", file: "greenPathStraight.png" },
     { name: "greenTee", file: "greenPathTee.png" },
@@ -45,28 +45,134 @@ export const imageURL = process.env.NODE_ENV === "production" ? "media/" : "http
 function App() {
     const [page, setPage] = React.useState("HomePage");
     const [userData, setUserData] = React.useState(null);
+    const [adminMapList, setAdminMapList] = React.useState(null);
+    const [adminMapSelected, setAdminMapSelected] = React.useState(0);
+
+    // Startup processes. We're primarily concerned about letting existing players log in automatically
+    React.useEffect(() => {
+        if (typeof localStorage.getItem("userid") == "object") return; // Do nothing if no data is in localStorage
+
+        fetch(
+            serverURL + "autologin.php",
+            DAX.serverMessage({ userid: localStorage.getItem("userid"), ajaxcode: localStorage.getItem("ajaxcode") }, false)
+        )
+            .then((res) => DAX.manageResponseConversion(res))
+            .catch((err) => console.log(err))
+            .then((data) => {
+                if (data.result !== "success") {
+                    return;
+                }
+                // At this point, everything is handled the same as a normal login
+                onLogin(data);
+            });
+    }, []);
 
     function onLogin(pack) {
         // Handles user actions when the user logs in
         console.log(pack);
         if (pack.result === "success") {
+            // Use localStorage to keep the user's ID & access code
+            localStorage.setItem("userid", pack.userid);
+            localStorage.setItem("ajaxcode", pack.ajaxcode);
+
+            // Do something different for admin users
+            if (pack.usertype === "admin") {
+                setAdminMapList(pack.maplist);
+                setUserData({ id: pack.userid, name: pack.username, ajaxcode: pack.ajaxcode });
+                setPage("AdminMapList");
+                return;
+            }
+
             setPage("Overview");
             setUserData({ id: pack.userid, name: pack.username, ajaxcode: pack.ajaxcode });
+            return;
         }
+    }
+
+    function AdminSelectMap(mapSlot) {
+        // Changes the admin's selected map, while switching to the edit-map page
+        setAdminMapSelected(mapSlot);
+        setPage("AdminMapEdit");
     }
 
     function pickPage() {
         switch (page) {
             case "HomePage":
-                return <HomePage onLogin={onLogin} userData={userData} />;
+                return <HomePage onLogin={onLogin} />;
             case "Overview":
                 return <OverviewPage userData={userData} />;
+            case "AdminMapList":
+                return <AdminMapList userData={userData} mapList={adminMapList} updateMapList={setAdminMapList} setPage={setPage} />;
+            case "AdminMapEdit":
+                return <AdminMapEdit userData={userData} sel={adminMapSelected} mapList={adminMapList} />;
             default:
                 return <p>Sorry, page type of "{page}" not handled</p>;
         }
     }
 
     return <div>{pickPage()}</div>;
+}
+
+function AdminMapEdit(props) {
+    return <p>Hello! We are editing map #{props.sel}!</p>;
+}
+
+function AdminMapList(props) {
+    // Displays a list of all maps in the game
+    // prop fields - data
+    //      mapList - list of all maps this game has
+    // prop fields - functions
+    //      updateMapList - called when a new map is created. Passes the updated full map list
+    //      selectMap - selects a map to display
+
+    const [newName, setNewName] = React.useState("");
+
+    function nameUpdate(field, value) {
+        setNewName(value);
+    }
+
+    function createMap() {
+        // Now, we collect the new map name and have the server make a new map
+        if (newName === "") {
+            console.log("Error - map must have a name");
+            return;
+        }
+        fetch(serverURL + "admin.php", DAX.serverMessage({ action: "CreateMap", mapname: newName }, true))
+            .then((res) => DAX.manageResponseConversion(res))
+            .catch((err) => console.log("server error", err))
+            .then((data) => {
+                if (data.result !== "success") {
+                    console.log("Server responded with error:", data);
+                    return;
+                }
+
+                // when map creation is successful, we want to add the map to our list, then start editing it
+                let list = props.mapList;
+                list.push({ name: newName, iconx: 0, icony: 0, tilestall: 10, tileswide: 10, tiles: [], waves: [] });
+                props.updateMapList(list);
+
+                // We also want to open that map for editing
+                props.selectMap(list.length - 1);
+                setNewName("");
+            });
+    }
+
+    return (
+        <>
+            <HeaderBar userData={props.userData} />
+            <p>Hello admin!</p>
+            {props.mapList.map((val, key) => (
+                <p className="fakelink singleline" key={key}>
+                    {val.name}
+                </p>
+            ))}
+
+            {/*Now, allow new maps to be made */}
+            <p style={{ fontWeight: "bold" }}>Create new map</p>
+            <DanInput placeholder="Map Name" onUpdate={nameUpdate} fileName="" onEnter={createMap} />
+            <input type="button" value="Create & Open" onClick={createMap} />
+        </>
+    );
 }
 
 function HeaderBar(props) {
@@ -107,11 +213,13 @@ function HeaderBar(props) {
                     // Go ahead and clear localstorage content, so that they're logged out locally anyway
                     localStorage.removeItem("userid");
                     localStorage.removeItem("access");
+                    return;
                 }
+                setUserError("");
                 props.onLogin(data);
             });
         // While we wait for a response, let's show that we're doing something
-        props.setErrorText("Working...");
+        setUserError("Working...");
     }
 
     let displayMode = typeof props.userData === "object" ? 1 : 0;
@@ -138,7 +246,7 @@ function HeaderBar(props) {
             <div style={{ display: "block", position: "absolute", right: 10, top: 5, backgroundColor: "white" }}>
                 {displayMode === 1 ? (
                     <p>
-                        Hello user!
+                        Hello {props.userData.name}!
                         <br />
                         ...we need a logout button
                     </p>
@@ -157,6 +265,7 @@ function HeaderBar(props) {
                         </form>
                     </>
                 )}
+                <p>{userError}</p>
             </div>
         </div>
     );
@@ -180,7 +289,7 @@ function HomePage(props) {
 function OverviewPage(props) {
     return (
         <>
-            <HeaderBar />
+            <HeaderBar userData={props.userData} />
             <p>Hello new user!</p>
         </>
     );

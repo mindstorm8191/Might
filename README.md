@@ -31,7 +31,8 @@ Ethan is right; we need to keep this simple. Or at least, the game should start 
 -   (Borrow some concepts from Thaumcraft's Tainted lands)
 -   Tiles that darken or change color, without anything to explain why
 -   Creatures moving around, generally in the same direction, but not impacting the battle any
--   Plants dying or transforming into grotesque hostile organisms. Animals too
+-   Plants dying or transforming into grotesque hostile organisms. Passive animals around can do the same
+-   Unstable interface; framerate has interruptions, having tiny pauses as though the computer is lagging. Later, pauses are longer and more noticeable, where things will creep around during the pauses.
 
 ##### Effects that The Darkness can generate in a battle
 
@@ -41,6 +42,9 @@ Ethan is right; we need to keep this simple. Or at least, the game should start 
 -   Spheres of influence cause towers / traps to fire weakly or not at all, for a time
 -   Vein-like extensions creeping across the map, which can spawn new creatures on the map at its ends
 -   Torches / other light sources that go dim or completely out
+-   Time jumps accompanied with pausing and jitteriness. Monsters can suddenly jump to different places as though seconds of frames were lost. Monsters may even jump through barricades through this. Towers and defenses won't benefit from this; either that or their attacks will be reset. Any shots already mid-air will miss.
+
+Generally, The Darkness does not play fair with the player
 
 ##### Light sources the user can place
 

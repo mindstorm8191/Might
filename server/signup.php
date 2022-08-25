@@ -21,8 +21,6 @@ $con = verifyInput($msg, [
 // Also check that the two passwords match
 if($con['password'] !== $con['pass2']) ajaxreject('badinput', 'Your passwords did not match');
 
-reporterror('server/signup.php', 'test!');
-
 // Set up some randomized variables to use for this user
 srand(time());
 $ajaxcode = rand(0, pow(2, 31));
@@ -33,6 +31,8 @@ DanDBList("INSERT INTO player (name, password, email, emailcode, ajaxcode, ipadd
           'sssiis', [$con['username'], $con['password'], $con['email'], $emailcode, $ajaxcode, $_SERVER['REMOTE_ADDR']],
           'ajax.php->action signup->add new user');
 $playerid = mysqli_insert_id($db);
+
+// Note that there are no options to make an admin user; admins must be added via database edits
 
 // Well, that's about all we really need to do here, since there's no world to manage this time. Send the user a Success message
 die(json_encode([

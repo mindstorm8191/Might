@@ -28,6 +28,15 @@
   color: #61dafb;
 }
 
+.singleline {
+  margin-top: 0.35em;
+  margin-bottom: 0em;
+}
+.fakelink {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
