@@ -5,8 +5,12 @@
 
     Task List
 
-4) Create a maps list, and ways to create a new map
-5) 
+1) Start setting up a new method to generate maps. We need to have a single image as the tile, and the map dictate where towers & paths can
+    be placed at. We will need lots of pictures scanned in
+2) Have a way to control the number of tiles on the map, and have them scale appropriately to fit what we see of the picture
+3) Set up a way to set the image tile used for the displayed map
+4) Allow the mode of each tile to be changed, using the editor. This will be the only bulk data (of the map) that needs saved
+5) Start getting a game map displayed and waves functioning. Get gem towers to fire at the monsters
 */
 
 import React from "react";
@@ -187,7 +191,7 @@ function GameScreen(props) {
     );
 }
 
-function GroundTile(props) {
+export function GroundTile(props) {
     const texture = useLoader(
         TextureLoader,
         "http://localhost/Might/getmedia.php?file=" + tileSet.find((e) => e.name === props.tile.tile).file
@@ -195,7 +199,11 @@ function GroundTile(props) {
 
     return (
         <React.Suspense fallback={null}>
-            <mesh {...props} position={[props.tile.x, props.tile.y, 0]} rotation={[0, 0, (props.tile.rot * Math.PI) / 2]}>
+            <mesh
+                {...props}
+                position={[props.tile.x + props.xpos, props.tile.y + props.ypos, 0]}
+                rotation={[0, 0, (props.tile.rot * Math.PI) / 2]}
+            >
                 <planeBufferGeometry />
                 <meshLambertMaterial map={texture} />
             </mesh>
@@ -203,7 +211,7 @@ function GroundTile(props) {
     );
 }
 
-function GemTower(props) {
+export function GemTower(props) {
     const { nodes, materials } = useGLTF("http://localhost/Might/getmedia.php?file=GemTower.gltf");
     const textures = useLoader(TextureLoader, [
         "http://localhost/Might/getmedia.php?file=glitter.png",

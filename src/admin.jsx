@@ -8,8 +8,14 @@ import "./App.css";
 import { DAX } from "./DanAjax.js";
 import { DanInput } from "./DanInput.jsx";
 
-import { serverURL } from "./App.js";
+import { serverURL, GemTower, GroundTile } from "./App.js";
 import { HeaderBar } from "./account.jsx";
+
+import * as Three from "three";
+import { useGLTF } from "@react-three/drei";
+import { Canvas, useThree, useFrame, useLoader } from "@react-three/fiber";
+import { TextureLoader } from "three/src/loaders/TextureLoader";
+
 
 export function AdminMapList(props) {
     // Displays a list of all maps in the game
@@ -139,13 +145,29 @@ export function AdminMapEdit(props) {
         }
     },[]);
 
+    const [cursorPos, setCursorPos] = React.useState({x:0, y:0});
+
     return (
         <>
             <HeaderBar userData={props.userData} />
-            <p>
-                Hello! We are editing map #{props.sel}!
-                There are {(typeof(props.mapList[props.sel].tiles)==='undefined')?0:props.mapList[props.sel].tiles.length} tiles here!
-            </p>
+            <Canvas style={{ height: "calc(100vh - 150px)", backgroundColor: "black" }} camera={{ position: [0, 0, 12] }}>
+                <ambientLight intensity={0.25} />
+                {typeof(props.mapList[props.sel].tiles)!=='object'?'':props.mapList[props.sel].tiles.map((tile,key) => (
+                    <GroundTile key={key} tile={tile} xpos={-5} ypos={-5} onClick={()=>setCursorPos({x:tile.x, y:tile.y})} />
+                ))}
+                <BlockCursor position={[cursorPos.x-5, cursorPos.y-5, 0]} />
+            </Canvas>
         </>
+    );
+}
+
+function BlockCursor(props) {
+    const { nodes, materials } = useGLTF("http://localhost/Might/getmedia.php?file=BlockCursor.gltf");
+    return (
+        <React.Suspense fallback={null}>
+            <mesh geometry={nodes.Cube.geometry} {...props} scale={0.5} rotation={[Math.PI/2,0,0]}>
+                <meshPhongMaterial color={"blue"} />
+            </mesh>
+        </React.Suspense>
     );
 }

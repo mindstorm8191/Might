@@ -14,7 +14,7 @@ export const DAX = {
         if (includeUserData) {
             content.userid = localStorage.getItem("userid");
             content.ajaxcode = localStorage.getItem("ajaxcode");
-            console.log("Userid info included. value is" + includeUserData + ". Sending " + JSON.stringify(content));
+            //console.log("Userid info included. value is" + includeUserData + ". Sending " + JSON.stringify(content));
         }
         return {
             method: "post",
